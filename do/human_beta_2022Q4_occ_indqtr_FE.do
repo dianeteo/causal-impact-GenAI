@@ -9,7 +9,7 @@ gen t_index = tq - yq(2022,1)
 local base_t = yq(2022,3) - yq(2022,1)
 egen indq = group(rics_k50 tq)
 
-reghdfe log_postings ib(`base_t').t_index##i.treated, absorb(i.rics_k50 indq occ_id) vce(cluster occ_id)
+reghdfe log_postings ib(`base_t').t_index##i.treated, absorb(indq occ_id) vce(cluster occ_id)
 
 matrix pre_coef = J(2,1,.)
 matrix pre_se = J(2,1,.)
@@ -58,5 +58,5 @@ replace coef = 0 if relq == -1
 replace se = 0 if relq == -1
 gen ci_lower = coef - 1.96*se
 gen ci_upper = coef + 1.96*se
-twoway (rcap ci_upper ci_lower relq, lwidth(medthick)) (scatter coef relq, msize(medium) msymbol(O)), xline(0, lpattern(dash) lwidth(medium)) yline(0, lpattern(dash)) xlabel(-3(1)8, angle(0) labsize(small)) xtitle("Quarters relative to event (0 = 2022Q4)") ytitle("Effect on log postings (high vs low exposure)") title("Event study: Occ FE + Industry FE + Industry-Quarter FE") legend(off) graphregion(color(white)) bgcolor(white) note("Note: Period -1 (2022Q3) normalized to zero (reference period).")
+twoway (rcap ci_upper ci_lower relq, lwidth(medthick)) (scatter coef relq, msize(medium) msymbol(O)), xline(0, lpattern(dash) lwidth(medium)) yline(0, lpattern(dash)) xlabel(-3(1)8, angle(0) labsize(small)) xtitle("Quarters relative to event (0 = 2022Q4)") ytitle("Effect on log postings (high vs low exposure)") title("Event study: Occ FE + Industry-Quarter FE") legend(off) graphregion(color(white)) bgcolor(white) note("Note: Period -1 (2022Q3) normalized to zero (reference period).")
 restore
