@@ -1,4 +1,4 @@
-use occ_ind_quarter_panel_highlow_human_beta_no_recruit_event2023Q1.dta, clear
+use occ_ind_quarter_panel_highlow_human_beta_no_recruit_baseline_placebo2022Q3.dta, clear
 cap drop tq relq t_index indq
 gen tq = yq(year, qtr_num)
 format tq %tq
