@@ -1,5 +1,7 @@
 # Causal Impact of Generative AI Adoption on Firm-Level Workforce Outcomes
 
+**NUS Final Year Project — Diane**
+
 An empirical study of how firms' adoption of generative AI tools affects hiring, separations, promotions, and workforce composition, using a staggered difference-in-differences design on Singapore labour market data from Revelio Labs.
 
 ---
@@ -22,7 +24,7 @@ Three estimators are used in parallel:
 | Callaway-Sant'Anna | Doubly-robust ATT(g,t), never-treated controls | `did` |
 | Sun-Abraham | Interaction-weighted staggered DiD | `fixest::sunab` |
 
-Pre-trends are tested with an extended panel back to 2019Q1.
+Pre-trends are tested with an extended panel back to 2021Q1.
 
 ---
 
@@ -35,6 +37,8 @@ llm_inference.ipynb
     ↓  GPT-4o classifies keyword-flagged postings as integrator / non-integrator
 panel_construction.ipynb
     ↓  firm-quarter .dta panels
+placebo_tests.ipynb
+    ↓  placebo .dta panels (random treatment assignment, 10 seeds)
 analysis.R
     ↓  event study plots, robustness checks, mechanism plots
 ```
@@ -67,7 +71,13 @@ Builds balanced firm-quarter panels from Revelio position spells. Resolves overl
 | `firm_quarter_promotions_active_ge20_...pretrend2021.dta` | Within-firm upward moves + promotion rate |
 | `stock_staggered.dta`, `hires_staggered.dta`, `seps_staggered.dta`, `promos_staggered.dta` | Staggered versions with `first_treat_tq` for CS + SA estimators |
 
-### 4. `analysis.R`
+### 4. `placebo_tests.ipynb`
+Generates 10 placebo new-hires panels by randomly assigning treatment to 1% of active firms per seed, holding the panel structure fixed. The resulting `.dta` files feed into the placebo envelope plot in `analysis.R`.
+
+**Inputs:** `panel_construction.ipynb` outputs (clean positions + treated firms)  
+**Outputs:** `data/Positions/firm_quarter_new_hires_active_ge20_placebo{1..10}_pretrend2021.dta`
+
+### 5. `analysis.R`
 Estimation and visualisation. Sections:
 1. Baseline DiD event studies (four outcomes)
 2. Placebo test — new hires
@@ -85,13 +95,6 @@ Estimation and visualisation. Sections:
 ## Data
 
 Data from [Revelio Labs](https://www.revelio.com/), accessed via WRDS and AWS Athena at NUS. Not included in this repository due to licensing restrictions.
-
-| Source file | Description |
-|---|---|
-| `SG-{year}.csv` | Raw SG job postings from Revelio LinkedIn data (2021–2025) |
-| `positions_stock.csv` | Individual position spells with seniority, company, start/end dates |
-| `positions_stock_2019_onwards_robustness.csv` | Extended positions data for pre-trend robustness check |
-| `occ_level.csv` | Occupation-level AI exposure scores (O\*NET, Eloundou et al. framework) |
 
 ---
 
@@ -127,11 +130,3 @@ did, scales
 ```
 
 ---
-
-## Related Literature
-
-- Eloundou et al. (2023) — GPTs are GPTs: LLM exposure scores by occupation
-- Callaway & Sant'Anna (2021) — Difference-in-differences with multiple time periods
-- Sun & Abraham (2021) — Estimating dynamic treatment effects in event studies
-- Acemoglu & Restrepo (2022) — Tasks, automation, and the rise in US wage inequality
-- Frey & Osborne (2017) — The future of employment
