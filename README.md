@@ -107,33 +107,6 @@ Data from [Revelio Labs](https://www.revelio.com/), accessed via WRDS and AWS At
 
 ---
 
-## Repository Structure
-
-```
-causal-impact-GenAI/
-├── notebooks/
-│   ├── deduplicate.ipynb
-│   ├── llm_inference.ipynb
-│   └── panel_construction.ipynb
-├── analysis.R
-├── data/
-│   ├── Postings/
-│   │   ├── SG-{year}.csv              # not tracked (large)
-│   │   ├── SG-{year}-WITHOUT-REPOSTS-W60D.parquet
-│   │   └── 2025/
-│   ├── Positions/
-│   │   ├── positions_stock.csv        # not tracked (large)
-│   │   ├── clean_positions.csv
-│   │   └── *.dta                      # panel outputs
-│   ├── Firm Level/
-│   │   └── flagged_postings_gpt_predictions*.csv
-│   └── AI Exposure Scores/
-│       └── occ_level.csv
-└── README.md
-```
-
----
-
 ## Requirements
 
 **Python** (notebooks)
