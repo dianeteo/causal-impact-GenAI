@@ -1,14 +1,12 @@
 # Causal Impact of Generative AI Adoption on Firm-Level Workforce Outcomes
 
-**NUS Final Year Project — Diane**
-
 An empirical study of how firms' adoption of generative AI tools affects hiring, separations, promotions, and workforce composition, using a staggered difference-in-differences design on Singapore labour market data from Revelio Labs.
 
 ---
 
 ## Research Question
 
-Did the widespread availability of generative AI (proxied by ChatGPT's November 2022 launch) causally change how firms hire, retain, and promote workers — and did those effects differ across seniority levels and occupation-level AI exposure?
+Did the widespread availability of generative AI (proxied by ChatGPT's November 2022 launch) causally change how firms hire, retain, and promote workers — and did those effects differ across seniority levels and occupation-level GenAI exposure?
 
 ---
 
@@ -24,7 +22,16 @@ Three estimators are used in parallel:
 | Callaway-Sant'Anna | Doubly-robust ATT(g,t), never-treated controls | `did` |
 | Sun-Abraham | Interaction-weighted staggered DiD | `fixest::sunab` |
 
-Pre-trends are tested with an extended panel back to 2021Q1.
+Heterogeneous effects are estimated via a triple differences-in-differences model across four group dimensions:
+
+| Dimension | Group = 1 | Group = 0 |
+|-----------|-----------|-----------|
+| A. Junior vs Senior | Levels 1–2 | Levels 3–7 |
+| B. Entry-level vs Experienced | Level 1 | Levels 2–7 |
+| C. Early Professionals vs Others | Level 2 | Levels 3–7 |
+| D. AI Exposure | High (above median) | Low (below median) |
+
+Pre-trends are tested with an extended panel back to 2019Q1.
 
 ---
 
@@ -79,22 +86,31 @@ Generates 10 placebo new-hires panels by randomly assigning treatment to 1% of a
 
 ### 5. `analysis.R`
 Estimation and visualisation. Sections:
-1. Baseline DiD event studies (four outcomes)
-2. Placebo test — new hires
-3. Baseline characteristics (treated vs control)
-4. Employment trends by seniority
-5. Occupation-level position stock plots
-6. GenAI adopter posting trends
-7. Industry distribution (treated vs control)
-8. Callaway-Sant'Anna staggered DiD
-9. Sun-Abraham staggered DiD
-10. Mechanism plots — hiring rate, seniority event study, hire share composition, triple-DiD
+1. Baseline DiD event studies (four outcomes: stock, hires, separations, promotions)
+2. Placebo test — new hires (with 10-seed envelope)
+3. Baseline characteristics (treated vs control over time)
+4. Employment trends by seniority (% change from 2021Q1 baseline)
+5. Occupation-level position stock plots (software developers, HR specialists)
+6. GenAI adopter posting trends (postings per quarter, new adopters, cumulative)
+7. Industry distribution (treated vs control firms, top 10 RICS K50)
+8. Callaway-Sant'Anna staggered DiD (four outcomes)
+9. Sun-Abraham staggered DiD (four outcomes)
+10. Mechanism plots — hiring rate, seniority event study, hire share composition
+11. Mechanism plots — seniority event study across Level 1 / Level 2 / Level 3–7
+12. Triple differences-in-differences (heterogeneous effects across four group dimensions)
 
 ---
 
 ## Data
 
 Data from [Revelio Labs](https://www.revelio.com/), accessed via WRDS and AWS Athena at NUS. Not included in this repository due to licensing restrictions.
+
+| Source file | Description |
+|---|---|
+| `SG-{year}.csv` | Raw SG job postings from Revelio LinkedIn data (2021–2025) |
+| `positions_stock.csv` | Individual position spells with seniority, company, start/end dates |
+| `positions_stock_2019_onwards_robustness.csv` | Extended positions data for pre-trend robustness check |
+| `occ_level.csv` | Occupation-level AI exposure scores (O\*NET, Eloundou et al. framework) |
 
 ---
 
@@ -130,3 +146,25 @@ did, scales
 ```
 
 ---
+
+## Related Literature
+
+**Task-level exposure and susceptibility**
+- Eloundou et al. (2024) — GPTs are GPTs: Labor market impact potential of LLMs
+- Gmyrek et al. (2023, 2025) — Generative AI and jobs: ILO occupational exposure indices
+
+**Micro-level productivity experiments**
+- Noy & Zhang (2023) — Experimental evidence on the productivity effects of generative AI
+- Brynjolfsson et al. (2025) — Canaries in the Coal Mine? Employment effects of AI
+- Cui et al. (2025) — Effects of generative AI on high-skilled work: software developers
+
+**Observational studies on aggregate labour market outcomes**
+- Humlum & Vestergaard (2025) — Large language models, small labor market effects
+- Hosseini & Lichtinger (2025) — GenAI as seniority-biased technological change
+- Liu et al. (2025) — Labor demand in the shadow of generative AI
+- Johnston & Makridis (2025) — Labor market effects of generative AI: a DiD analysis
+
+**Identification and methodology**
+- Callaway & Sant'Anna (2021) — Difference-in-differences with multiple time periods
+- Sun & Abraham (2021) — Estimating dynamic treatment effects in event studies
+- Liang et al. (2025) — Widespread adoption of LLM-assisted writing across society
